@@ -81,4 +81,4 @@ m_json_free(json);
 ```
 ### Known issues
 * Doesn't convert backslash control characters (eg; `\"` -> `"`)
-* Doesn't conform to the spec exactly as this was just a toy project.
+* Doesn't conform to the spec exactly as this currently just a very basic project.
