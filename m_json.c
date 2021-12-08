@@ -234,6 +234,7 @@ m_json* m_json_parse(char* json) {
     return json_struct;
 }
 
+// TODO: this is VERY inefficient.
 #define SB_APPEND(str) { \
     char* c = malloc(strlen(str)+1);\
     strcpy(c, str);\
@@ -300,7 +301,7 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
     }
 }
 
-char* m_json_to_str(m_json* json) { // TODO: this is very inefficient.
+char* m_json_to_str(m_json* json) {
     sbuilder* sb = sb_create();
     json_string_recursive(json, NULL, sb);
     char* str = sb_concat(sb);
