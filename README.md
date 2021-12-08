@@ -48,6 +48,7 @@ void m_json_free(m_json* root);
 ```
 Remember to destroy any m_json* objects with m_json_free().
 ## Usage
+### Editing JSON
 ```
 m_json* json = m_json_parse_object(str);
 if (json == NULL) return 1;
@@ -56,4 +57,25 @@ char* json_str = m_json_to_str(json); // edited json string
 printf("%s\n", json_str);
 free(json_str);
 m_json_free(json);
+```
+### Creating JSON
+```
+m_json* json = m_json_create();
+json->type = m_json_ARRAY;
+json->data_type = m_json_ARRAY_ITEM;
+for (int i=0; i < 15; i++) {
+    m_json* array_item = m_json_create();
+    array_item->type = m_json_ARRAY_ITEM;
+    array_item->data_type = m_json_NUMBER;
+    array_item->number = i;
+    m_json_push_child(json, array_item);
+}
+char* str = m_json_to_str(json);
+printf("%s\n", str);
+free(str);
+m_json_free(json);
+```
+#### Output
+```
+[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 ```
