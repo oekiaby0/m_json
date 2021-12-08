@@ -2,7 +2,7 @@
 A JSON parser created in C as a learning experience.
 
 ## JSON structs and enums
-```
+```c
 typedef struct m_json {
     enum m_json_type type;
     enum m_json_type data_type;
@@ -37,7 +37,7 @@ The JSON struct variables are the following:
 * `number` - data number (available only when `data_type` is equal to `m_json_NUMBER`)
 
 ## Functions
-```
+```c
 m_json* m_json_parse_object(char* json);
 m_json* m_json_parse_array(char* json);
 m_json* m_json_parse(char* json); // parses string -- returns NULL if an error occurred.
@@ -49,7 +49,7 @@ void m_json_free(m_json* root);
 Remember to destroy any m_json* objects with m_json_free().
 ## Usage
 ### Editing JSON
-```
+```c
 m_json* json = m_json_parse_object(str);
 if (json == NULL) return 1;
 json->child->key = "edited key name";
@@ -59,7 +59,7 @@ free(json_str);
 m_json_free(json);
 ```
 ### Creating JSON
-```
+```c
 m_json* json = m_json_create();
 json->type = m_json_ARRAY;
 json->data_type = m_json_ARRAY_ITEM;
@@ -76,7 +76,7 @@ free(str);
 m_json_free(json);
 ```
 #### Output
-```
+```json
 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 ```
 ### Known issues
