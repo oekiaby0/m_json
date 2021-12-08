@@ -79,6 +79,6 @@ m_json_free(json);
 ```json
 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 ```
-### Known issues
+## Known issues
 * Doesn't convert backslash control characters (eg; `\"` -> `"`)
 * Doesn't conform to the spec exactly as this currently just a very basic project.
