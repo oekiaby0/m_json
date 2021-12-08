@@ -255,7 +255,7 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
         SB_APPEND( head->data_type == m_json_OBJECT_ITEM ? "}" : "]");
         if (head->next) {
             if (delimiter) {
-                SB_APPEND( delimiter);
+                SB_APPEND(delimiter);
             }
             json_string_recursive(head->next, delimiter, sb);
         }
@@ -271,17 +271,17 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
             default: str = "?";
         }
         if (head->key) {
-                SB_APPEND( "\"");
+                SB_APPEND("\"");
                 SB_APPEND( head->key);
-                SB_APPEND( "\":");
+                SB_APPEND("\":");
         }
         if (str) {
             if (head->data_type == m_json_STRING) {
-                SB_APPEND( "\"");
-                SB_APPEND( str);
-                SB_APPEND( "\"");
+                SB_APPEND("\"");
+                SB_APPEND(str);
+                SB_APPEND("\"");
             } else {
-                SB_APPEND( str);
+                SB_APPEND(str);
             }
         } else {
             char* buffer = malloc(sizeof(char) * NUMBER_BUFFER_LENGTH);
@@ -289,7 +289,7 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
             sb_append(sb, buffer);
         }
         if (head->next) {
-            SB_APPEND( delimiter);
+            SB_APPEND(delimiter);
         }
 
         if (head->child) {
