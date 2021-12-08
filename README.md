@@ -31,10 +31,10 @@ The JSON struct variables are the following:
 * `data_type` type of the data of the node
 * `prev` previous node in the JSON tree
 * `next` next node in the JSON tree
-* `key` key of the JSON object item (available only when type is equal to m_json_OBJECT_ITEM)
-* `child` children of the object or array (available only when data_type is equal to m_json_OBJECT_ITEM or m_json_ARRAY_ITEM)
-* `string` data string (available only when data_type is equal to m_json_STRING)
-* `number` data number (available only when data_type is equal to m_json_NUMBER)
+* `key` key of the JSON object item (available only when `type` is equal to m_json_OBJECT_ITEM)
+* `child` children of the object or array (available only when `data_type` is equal to m_json_OBJECT_ITEM or m_json_ARRAY_ITEM)
+* `string` data string (available only when `data_type` is equal to m_json_STRING)
+* `number` data number (available only when `data_type` is equal to m_json_NUMBER)
 
 ## Functions
 ```
