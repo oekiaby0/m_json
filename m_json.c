@@ -15,7 +15,6 @@ m_json* m_json_create() {
     json->child = NULL;
     json->key = NULL;
     json->string = NULL;
-    json->data_type = 0;
     json->type = 0;
     return json;
 }
@@ -28,7 +27,7 @@ void m_json_free(m_json* root) {
     if (root->next) {
         m_json_free(root->next);
     }
-    if (root->data_type == m_json_STRING) {
+    if (root->type == m_json_STRING) {
         free(root->string);
     }
     free(root);
@@ -47,16 +46,16 @@ void m_json_push_child(m_json* json, m_json* child) {
 
 int parse_value(m_json* json, m_json_token* token) {
     switch (token->type) {
-        case JSON_NULL: json->data_type = m_json_NULL; break;
-        case JSON_TRUE: json->data_type = m_json_TRUE; break;
-        case JSON_FALSE: json->data_type = m_json_FALSE; break;
+        case JSON_NULL: json->type = m_json_NULL; break;
+        case JSON_TRUE: json->type = m_json_TRUE; break;
+        case JSON_FALSE: json->type = m_json_FALSE; break;
         case JSON_STRING: {
-            json->data_type = m_json_STRING;
+            json->type = m_json_STRING;
             json->string = token->str;
             break;
         }
         case JSON_NUMBER: {
-            json->data_type = m_json_NUMBER;
+            json->type = m_json_NUMBER;
             json->number = token->number;
             break;
         }
@@ -86,7 +85,6 @@ m_json* parse_array(l_node** p_node) {
 
     m_json* array = m_json_create();
     array->type = m_json_ARRAY;
-    array->data_type = m_json_ARRAY_ITEM;
     while (token && token->type != JSON_CLOSE_BRACKETS) {
         m_json* item;
         switch (token->type) {
@@ -107,7 +105,6 @@ m_json* parse_array(l_node** p_node) {
             }
         }
         if (!item) FAIL_PARSE_ARRAY();
-        item->type = m_json_ARRAY_ITEM;
         m_json_push_child(array, item);
 
 
@@ -142,7 +139,6 @@ m_json* parse_object(l_node** p_node) {
 
     m_json* object = m_json_create();
     object->type = m_json_OBJECT;
-    object->data_type = m_json_OBJECT_ITEM;
 
     while (token && token->type != JSON_CLOSE_BRACES) {
         if (token->type != JSON_STRING) FAIL_PARSE_OBJECT();
@@ -176,7 +172,6 @@ m_json* parse_object(l_node** p_node) {
         }
         if (!item) FAIL_PARSE_OBJECT();
         item->key = key;
-        item->type = m_json_OBJECT_ITEM;
         m_json_push_child(object, item);
 
         
@@ -225,6 +220,37 @@ m_json* m_json_parse(char* json) {
         json_struct = parse_array(&tokens->start);
     } else if (((m_json_token*) tokens->start->data)->type == JSON_OPEN_BRACES) {
         json_struct = parse_object(&tokens->start);
+    } else if (
+        ((m_json_token*) tokens->start->data)->type == JSON_STRING &&
+        tokens->start == tokens->end
+    ) {
+        json_struct = m_json_create();
+        json_struct->type = m_json_STRING;
+        json_struct->string = ((m_json_token*) tokens->start->data)->str;
+    } else if (
+        ((m_json_token*) tokens->start->data)->type == JSON_TRUE &&
+        tokens->start == tokens->end
+    ) {
+        json_struct = m_json_create();
+        json_struct->type = m_json_TRUE;
+    } else if (
+        ((m_json_token*) tokens->start->data)->type == JSON_FALSE &&
+        tokens->start == tokens->end
+    ) {
+        json_struct = m_json_create();
+        json_struct->type = m_json_FALSE;
+    } else if (
+        ((m_json_token*) tokens->start->data)->type == JSON_NULL &&
+        tokens->start == tokens->end
+    ) {
+        json_struct = m_json_create();
+        json_struct->type = m_json_NULL;
+    } else if (
+        ((m_json_token*) tokens->start->data)->type == JSON_NUMBER &&
+        tokens->start == tokens->end
+    ) {
+        json_struct = m_json_create();
+        json_struct->type = m_json_NUMBER;
     } else {
         l_list_free(tokens);
         return NULL;
@@ -242,17 +268,17 @@ m_json* m_json_parse(char* json) {
 }
 
 void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
-    if (head->data_type == m_json_OBJECT_ITEM || head->data_type == m_json_ARRAY_ITEM) {
+    if (head->type == m_json_OBJECT || head->type == m_json_ARRAY) {
         if (head->key) {
             SB_APPEND("\"");
             SB_APPEND(head->key);
             SB_APPEND("\":");
         }
-        SB_APPEND( head->data_type == m_json_OBJECT_ITEM ? "{" : "[");
+        SB_APPEND( head->type == m_json_OBJECT ? "{" : "[");
         if (head->child) {
             json_string_recursive(head->child, ",", sb);
         }
-        SB_APPEND( head->data_type == m_json_OBJECT_ITEM ? "}" : "]");
+        SB_APPEND( head->type == m_json_OBJECT ? "}" : "]");
         if (head->next) {
             if (delimiter) {
                 SB_APPEND(delimiter);
@@ -262,7 +288,7 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
     } else {
         char* str = NULL;
         double num;
-        switch (head->data_type) {
+        switch (head->type) {
             case m_json_STRING: str = head->string; break;
             case m_json_TRUE: str = "true"; break;
             case m_json_FALSE: str = "false"; break;
@@ -272,11 +298,11 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
         }
         if (head->key) {
                 SB_APPEND("\"");
-                SB_APPEND( head->key);
+                SB_APPEND(head->key);
                 SB_APPEND("\":");
         }
         if (str) {
-            if (head->data_type == m_json_STRING) {
+            if (head->type == m_json_STRING) {
                 SB_APPEND("\"");
                 SB_APPEND(str);
                 SB_APPEND("\"");

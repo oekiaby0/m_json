@@ -7,19 +7,16 @@
 
 enum m_json_type {
     m_json_NULL=1,
-    m_json_OBJECT,
-    m_json_OBJECT_ITEM,
-    m_json_ARRAY,
-    m_json_ARRAY_ITEM,
+    m_json_TRUE,
+    m_json_FALSE,
     m_json_STRING,
     m_json_NUMBER,
-    m_json_TRUE,
-    m_json_FALSE
+    m_json_ARRAY,
+    m_json_OBJECT,
 };
 
 typedef struct m_json {
     enum m_json_type type;
-    enum m_json_type data_type;
     struct m_json* prev;
     struct m_json* next;
     char* key;

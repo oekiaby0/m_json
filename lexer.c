@@ -26,7 +26,6 @@ char* get_str(char**c, char* terminate_chars) {
         if (!IS_WHITESPACE(*s)) len++;
         s++;
     }
-    if (!*s) return NULL;
     char* begin = *c;
     *c = s;
     char* str = malloc(sizeof(char) * (len+1));
