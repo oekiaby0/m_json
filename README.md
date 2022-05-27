@@ -5,7 +5,6 @@ A JSON parser created in C as a learning experience.
 ```c
 typedef struct m_json {
     enum m_json_type type;
-    enum m_json_type data_type;
     struct m_json* prev;
     struct m_json* next;
     char* key;
@@ -28,7 +27,6 @@ enum m_json_type {
 ```
 The JSON struct variables are the following:
 * `type` - type of the node
-* `data_type` - type of the data of the node
 * `prev` - previous node in the JSON tree
 * `next` - next node in the JSON tree
 * `key` - key of the JSON object item (available only when `type` is equal to `m_json_OBJECT_ITEM`)
@@ -62,11 +60,9 @@ m_json_free(json);
 ```c
 m_json* json = m_json_create();
 json->type = m_json_ARRAY;
-json->data_type = m_json_ARRAY_ITEM;
 for (int i=0; i < 15; i++) {
     m_json* array_item = m_json_create();
-    array_item->type = m_json_ARRAY_ITEM;
-    array_item->data_type = m_json_NUMBER;
+    array_item->type = m_json_NUMBER;
     array_item->number = i;
     m_json_push_child(json, array_item);
 }
@@ -80,5 +76,5 @@ m_json_free(json);
 [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 ```
 ## Known issues
-* Doesn't convert backslash control characters (eg; `\"` -> `"`)
-* Doesn't conform to the spec exactly as this currently just a very basic project.
+* Doesn't convert unicode control characters (eg; `\u1234`)
+* Doesn't conform to the spec exactly in many areas.
