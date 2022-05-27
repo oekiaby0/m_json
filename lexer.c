@@ -50,15 +50,84 @@ char* get_str(char**c, char* terminate_chars) {
 
 char* get_json_str(char**c) {
     char* s = *c;
-    while(*s && (*s != '"' || *(s-1) == '\\')) s++;
+    char last_escape = 0;
+    size_t escape_count = 0;
+    while (*s && (*s != '"' || last_escape == 1)) {
+        if (last_escape) {
+            last_escape = 0;
+            escape_count++;
+        } else if (*s == '\\') {
+            last_escape = 1;
+        }
+        s++;
+    }
     if (!*s) return NULL;
-    size_t len = s - *c;
+    size_t len = ((s - *c) - escape_count);
     char* begin = *c;
     *c = s;
     char* str = malloc(sizeof(char) * (len+1));
     char* b = str;
     while (len) {
-        *(str++) = *begin++; 
+        if (last_escape) {
+            switch (*begin) {
+                case '"': {
+                    *str = '"';
+                    break;
+                }
+                case '\\': {
+                    *str = '\\';
+                    break;
+                }
+                case '/': {
+                    *str = '/';
+                    break;
+                }
+                case 'b': {
+                    *str = '\b';
+                    break;
+                }
+                case 'f': {
+                    *str = '\f';
+                    break;
+                }
+                case 'n': {
+                    *str = '\n';
+                    break;
+                }
+                case 'r': {
+                    *str = '\r';
+                    break;
+                }
+                case 't': {
+                    *str = '\t';
+                    break;
+                }
+                case 'u': {
+                    if (len > 4) {
+                        *str = '\\';
+                        *++str = 'u';
+                        len--;
+                    } else {
+                        free(b);
+                        return NULL;
+                    }
+                    break;
+                }
+                default: {
+                    free(b);
+                    return NULL;
+                }
+            }
+            last_escape = 0;
+        } else if (*begin == '\\')  {
+            last_escape = 1;
+            begin++;
+            continue;
+        } else {
+            *str = *begin;
+        }
+        begin++;
+        str++;
         len--;
     }
     *str = '\0';
