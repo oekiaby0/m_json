@@ -11,7 +11,6 @@ m_json: $(FILES)
 	$(CC) -c $(SOURCE_FILES)
 	ar ruv $(ARCHIVE_OUT) *.o
 	ranlib $(ARCHIVE_OUT)
-	gcc main.c $(ARCHIVE_OUT) -o $(OUT)
 
 debug: $(FILES)
 	$(CC) -g -c $(SOURCE_FILES) main.c
