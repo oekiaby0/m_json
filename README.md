@@ -14,25 +14,23 @@ typedef struct m_json {
 } m_json;
 
 enum m_json_type {
-    m_json_NULL=1,
-    m_json_OBJECT,
-    m_json_OBJECT_ITEM,
-    m_json_ARRAY,
-    m_json_ARRAY_ITEM,
+    m_json_NULL,
+    m_json_TRUE,
+    m_json_FALSE,
     m_json_STRING,
     m_json_NUMBER,
-    m_json_TRUE,
-    m_json_FALSE
+    m_json_ARRAY,
+    m_json_OBJECT,
 };
 ```
 The JSON struct variables are the following:
 * `type` - type of the node
 * `prev` - previous node in the JSON tree
 * `next` - next node in the JSON tree
-* `key` - key of the JSON object item (available only when `type` is equal to `m_json_OBJECT_ITEM`)
-* `child` - items of the object or array (available only when `data_type` is equal to `m_json_OBJECT_ITEM` or `m_json_ARRAY_ITEM`)
-* `string` - data string (available only when `data_type` is equal to `m_json_STRING`)
-* `number` - data number (available only when `data_type` is equal to `m_json_NUMBER`)
+* `key` - key of the JSON object item (available only when `type` of parent is equal to `m_json_OBJECT`)
+* `child` - items of the object or array (available only when `type` is equal to `m_json_OBJECT` or `m_json_ARRAY`)
+* `string` - data string (available only when `type` is equal to `m_json_STRING`)
+* `number` - data number (available only when `type` is equal to `m_json_NUMBER`)
 
 ## Functions
 ```c
