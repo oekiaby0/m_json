@@ -274,11 +274,11 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
             SB_APPEND(head->key);
             SB_APPEND("\":");
         }
-        SB_APPEND( head->type == m_json_OBJECT ? "{" : "[");
+        SB_APPEND(head->type == m_json_OBJECT ? "{" : "[");
         if (head->child) {
             json_string_recursive(head->child, ",", sb);
         }
-        SB_APPEND( head->type == m_json_OBJECT ? "}" : "]");
+        SB_APPEND(head->type == m_json_OBJECT ? "}" : "]");
         if (head->next) {
             if (delimiter) {
                 SB_APPEND(delimiter);
@@ -304,6 +304,7 @@ void json_string_recursive(m_json* head, char* delimiter, sbuilder* sb) {
         if (str) {
             if (head->type == m_json_STRING) {
                 SB_APPEND("\"");
+                // TODO: unescape characters from string
                 SB_APPEND(str);
                 SB_APPEND("\"");
             } else {
