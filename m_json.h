@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 enum m_json_type {
-    m_json_NULL=1,
+    m_json_NULL,
     m_json_TRUE,
     m_json_FALSE,
     m_json_STRING,
