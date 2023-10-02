@@ -1,5 +1,5 @@
 # m_json
-A JSON parser created in C as a learning experience.
+`m_json` is a lightweight JSON parser implemented in C, created primarily as a learning experience. This parser provides a set of functions to parse JSON strings, manipulate JSON structures, and convert them to and from string representations.
 
 ## JSON structs and enums
 ```c
@@ -76,3 +76,5 @@ m_json_free(json);
 ## Known issues
 * Doesn't convert unicode control characters (eg; `\u1234`)
 * Doesn't conform to the spec exactly in many areas.
+
+Feel free to use and modify this JSON parser for your learning purposes. Keep in mind that it may not be suitable for production use due to the known issues and limitations.
